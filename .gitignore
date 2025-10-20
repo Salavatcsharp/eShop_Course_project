@@ -14,3 +14,7 @@
 .idea/
 src/.idea/
 eshop_microservices/
+# Build output folders
+obj/
+bin/
+config/
