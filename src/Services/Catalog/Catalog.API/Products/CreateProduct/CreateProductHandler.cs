@@ -29,26 +29,11 @@ public class CreateProductHandlerValidator : AbstractValidator<CreateProductComm
     }
 }
 
-internal class CreateProductHandler(IDocumentSession session, IValidator<CreateProductCommand> validator) 
+internal class CreateProductHandler(IDocumentSession session) 
     : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var result = await validator.ValidateAsync(request, cancellationToken);
-        
-        var errors = result.Errors
-            .GroupBy(e => e.PropertyName)
-            .ToDictionary(
-                g => g.Key,
-                g => g.Select(e => e.ErrorMessage).ToArray()
-            );
-
-        if (errors.Count != 0)
-        {
-            var errorMessages = string.Join("; ", errors.Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}"));
-            throw new ValidationException(errorMessages);
-        }
-        
         var product = new Product()
         {
             Name = request.Name,
