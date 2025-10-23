@@ -16,6 +16,19 @@
       retries: 5
       timeout: 5s
 
+  catalog-api:
+    build:
+      context: ./Services/Catalog/Catalog.API
+      dockerfile: Dockerfile
+    container_name: catalog-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Database=Host=postgres;Port=5432;Database=CatalogDb;Username=postgres;Password=postgres
+    ports:
+      - "6000:8080"
+      - "6060:8081"
+    depends_on:
+      - postgres
+
 volumes:
   postgres-data:
-
