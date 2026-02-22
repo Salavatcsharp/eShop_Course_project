@@ -1,3 +1,5 @@
+using Basket.API;
+using Basket.API.Services;
 using HealthChecks.UI.Client;
 using JasperFx;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -32,6 +34,13 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("Database")!)
     .AddRedis(builder.Configuration.GetConnectionString("Redis")!);
+
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
+});
+
+builder.Services.AddScoped<DiscountService>();
 
 var app = builder.Build();
 

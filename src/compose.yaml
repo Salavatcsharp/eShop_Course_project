@@ -39,12 +39,26 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__Database=Host=postgres;Port=5432;Database=BasketDb;Username=postgres;Password=postgres
       - ConnectionStrings__Redis=redis:6379
+      - GrpcSettings__DiscountUrl=http://discount-grpc:8080
     ports:
       - "6001:8080"
       - "6061:8081"
     depends_on:
       - postgres
       - redis
+      - discount-grpc
+        
+  discount-grpc:
+    build:
+      context: Services/Discount/Discount.Grpc
+      dockerfile: Dockerfile
+    container_name: discount-grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Database=Data Source=discountdb
+    ports:
+      - "6002:8080"
+      - "6062:8081"
       
   redis:
     image: redis:latest
